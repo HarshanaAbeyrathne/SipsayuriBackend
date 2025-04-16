@@ -38,9 +38,14 @@ const createTeacher = asyncHandler(async (req, res) => {
   // Check if teacher with same mobile already exists
   const teacherExists = await Teacher.findOne({ mobile });
   
+  // if (teacherExists) {
+  //   res.status(400);
+  //   throw new Error('Teacher with this mobile number already exists');
+  // }
+
   if (teacherExists) {
-    res.status(400);
-    throw new Error('Teacher with this mobile number already exists');
+    res.status(400).json({ message: 'Teacher with this mobile number already exists' });
+    return;
   }
   
   // Create teacher

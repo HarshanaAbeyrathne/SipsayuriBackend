@@ -6,7 +6,7 @@ const {
   createBill,
   updateBill,
   deleteBill
-} = require('../controllers/billController');
+} = require('../controllers/bill-controller');
 
 // Routes for /api/bills
 router.route('/')

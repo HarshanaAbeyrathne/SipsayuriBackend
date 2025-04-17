@@ -6,6 +6,9 @@ const cookieParser = require('cookie-parser');
 //importing routers
 const userRouter = require('./routers/userRouters');
 const teacherRouter = require('./routers/teacherRoutes');
+const { errorHandler } = require('./middleware/errorMiddleware');
+const bookRoutes = require('./routers/book-routes');
+const billRoutes = require('./routers/bill-routes');
 
 //express app
 const app = express();
@@ -24,7 +27,8 @@ app.use((req, res, next) => {
 //routers
 app.use('/api/user', userRouter);
 app.use('/api/teachers', teacherRouter);
-
+app.use('/api/books', bookRoutes);
+app.use('/api/bills', billRoutes);
 //connect to mongodb
 mongoose.connect(process.env.MONGO_URI) 
     .then(()=>{
@@ -35,3 +39,5 @@ mongoose.connect(process.env.MONGO_URI)
     })
     .catch((err)=>{console.log(err)});
 
+// Error middleware
+app.use(errorHandler);

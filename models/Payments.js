@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { collection } = require('./userModel');
 
 const paymentSchema = mongoose.Schema({
     bill: {
@@ -9,8 +8,7 @@ const paymentSchema = mongoose.Schema({
     },
     paymentDate: {
         type: Date,
-        required: [true, 'Please add a payment date'],
-        default: Date.now
+        required: [true, 'Please add a payment date']
     },
     amount: {
         type: Number,
@@ -21,6 +19,8 @@ const paymentSchema = mongoose.Schema({
         type: String,
         required: false, 
     },
+}, {
+    timestamps: true
 });
 
 const Payment = mongoose.model('Payment', paymentSchema);

@@ -5,11 +5,19 @@ const Bill = require('../models/Bill');
 
 // @route   POST /api/payments  
 const createPayment = async (req, res) => {
-  const { billId, amount, collectBy } = req.body;
+  const { billId, amount, collectBy , paymentDate} = req.body;
 
   // Validate input
   if (!billId || !amount) {
     return res.status(400).json({ message: 'Bill ID and amount are required' });
+  }
+
+  if (!collectBy) {
+    return res.status(400).json({ message: 'Collector name is required' });
+  }
+
+  if (!paymentDate) {
+    return res.status(400).json({ message: 'Payment date is required' });
   }
 
   try {
@@ -32,12 +40,20 @@ const createPayment = async (req, res) => {
     if (amount > bill.remainPayment) {
       return res.status(400).json({ message: 'Payment amount exceeds remaining payment' }); 
     }
-    // Create a new payment
-    const payment = new Payment({
+   // Create payment data
+    const paymentData = {
       bill: billId,
       amount,
       collectBy,
-    });
+    };
+
+    // Add payment date if provided, otherwise use current date
+    if (paymentDate) {
+      paymentData.paymentDate = new Date(paymentDate);
+    }
+
+    // Create a new payment
+    const payment = new Payment(paymentData);
 
     // Save the payment
     await payment.save();
@@ -94,7 +110,7 @@ const deletePaymentByPaymentId = async (req, res) => {
     // Update the bill's remaining payment and status
     bill.remainPayment += payment.amount;
     if (bill.remainPayment > 0) {
-      bill.status = 'Unpaid'; // Set status to Unpaid if there's remaining payment
+      bill.status = 'Pending'; // Set status to Unpaid if there's remaining payment
     } else {
       bill.status = 'Closed'; // Set status to Closed if no remaining payment
     }
@@ -107,7 +123,7 @@ const deletePaymentByPaymentId = async (req, res) => {
   }
 } 
 
-            
+
 
 // Export the functions to be used in routes
 

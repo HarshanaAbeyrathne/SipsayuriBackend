@@ -64,7 +64,9 @@ const billSchema = mongoose.Schema(
     remainPayment: {
       type: Number,
       required: true,
-      default: ref => ref.totalAmount
+      default: function() {
+        return this.totalAmount;
+      }
     },
     status: {
       type: String,
@@ -76,5 +78,13 @@ const billSchema = mongoose.Schema(
     timestamps: true
   }
 );
+
+// Pre-save middleware to ensure remainPayment is set correctly for new bills
+billSchema.pre('save', function(next) {
+  if (this.isNew && this.remainPayment === undefined) {
+    this.remainPayment = this.totalAmount;
+  }
+  next();
+});
 
 module.exports = mongoose.model('Bill', billSchema);

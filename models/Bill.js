@@ -60,7 +60,17 @@ const billSchema = mongoose.Schema(
       type: Number,
       required: true,
       default: 0
-    }
+    },
+    remainPayment: {
+      type: Number,
+      required: true,
+      default: ref => ref.totalAmount
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Paid', 'Closed'],
+      default: 'Pending'
+    } 
   },
   {
     timestamps: true

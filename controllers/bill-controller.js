@@ -8,11 +8,13 @@ const Book = require('../models/Book');
 // @access  Public
 const getBills = asyncHandler(async (req, res) => {
   const bills = await Bill.find({})
-    .populate('teacher', 'name mobile school')
+    .populate('teacher', 'teacherName mobile schoolName') // Ensure all relevant fields are populated
     .sort({ createdAt: -1 });
   
+  console.log('Fetched Bills:', bills);
   res.status(200).json(bills);
 });
+
 
 // @desc    Get a single bill
 // @route   GET /api/bills/:id
